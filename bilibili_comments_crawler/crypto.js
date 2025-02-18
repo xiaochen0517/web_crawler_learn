@@ -1,4 +1,4 @@
-var crypto;
+var at
 
 const Ri = function (t) {
     return null != t && (Li(t) || function (t) {
@@ -197,15 +197,13 @@ const ji = Ei;
         ,
         i._blocksize = 16,
         i._digestsize = 16,
-        crypto = function (e, n) {
+        at = function (e, n) {
             if (null == e)
                 throw new Error("Illegal argument " + e);
             var o = t.wordsToBytes(i(e, n));
             return n && n.asBytes ? o : n && n.asString ? r.bytesToString(o) : t.bytesToHex(o)
         }
 }();
-
-var at = crypto;
 
 function ft(e) {
     return e.substring(e.lastIndexOf("/") + 1, e.length).split(".")[0]
@@ -251,7 +249,8 @@ function lt(e) {
                     t.charAt(e) && r.push(t.charAt(e))
                 }
             )),
-            r.join("").slice(0, 32)), u = Math.round(Date.now() / 1e3), s = Object.assign({}, e, {
+            r.join("").slice(0, 32)), u = 1739876385, s = Object.assign({}, e, {
+            // r.join("").slice(0, 32)), u = Math.round(Date.now() / 1e3), s = Object.assign({}, e, {
             wts: u
         }), c = Object.keys(s).sort(), l = [], f = /[!'()*]/g, d = 0; d < c.length; d++) {
             var p = c[d]
@@ -277,9 +276,9 @@ console.log(get_w_rid(
         {
             mode: 3,
             oid: "114008111717942",
-            pagination_str: "{\"offset\":\"\"}",
+            pagination_str: `{"offset":"{\\"type\\":1,\\"direction\\":1,\\"session_id\\":\\"1781632233771436\\",\\"data\\":{}}"}`,
             plat: 1,
-            seek_rpid: "",
+            // seek_rpid: "",
             type: 1,
             web_location: 1315875
         },
