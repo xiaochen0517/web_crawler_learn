@@ -8,8 +8,9 @@ import json
 import time
 import execjs
 from urllib.parse import quote
+import browser_cookie
 
-cookie = "buvid3=D1C8F3F4-ED22-8D0C-90D5-6512ED983DC321434infoc; b_nut=1739763621; _uuid=CD1CE346-41CE-103EB-7D103-15D7B3103415222112infoc; buvid4=6B943605-04E3-5A23-E8ED-13AC5095AE8522169-025021703-pBn7cxoPJbzyelLrTzKACg%3D%3D; enable_web_push=DISABLE; enable_feed_channel=DISABLE; buvid_fp=b3d2bcf15966e04d3a182ecab6b5c04a; bili_ticket=eyJhbGciOiJIUzI1NiIsImtpZCI6InMwMyIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDAwMjI4MjMsImlhdCI6MTczOTc2MzU2MywicGx0IjotMX0.oI26AgrzX3ELa6uLg0yjTjzo8HHhezISQVg5MnG2ZvU; bili_ticket_expires=1740022763; home_feed_column=4; browser_resolution=1324-1916; CURRENT_FNVAL=4048; rpdid=|(umku))l)u)0J'u~Jm~YJYlY; SESSDATA=63db2eac%2C1755315725%2Cecc19%2A21CjATSTw0T9KnUdc0vej1_aKpq6FeS-n0nxBYHKTUvAIFa2nIfjnVPt_8u0IIZqlCugUSVl9nMWpaWXAxNlY3ZEo2UEFPX1lsdWxmc2NrczBQa0ZBQVBRcVMzTFlJSklmcnF6ZU1KaXhFcGlIczdvb3pJQWk3WGFGb2VFcHBDWks1Z3lCOVlka2RBIIEC; bili_jct=ef95d20db689c0e85aedfe4dcd944bf4; DedeUserID=286915431; DedeUserID__ckMd5=5e3bbb8008303cf6; sid=8nwzom1x; b_lsid=8AF217C6_19512713163; bp_t_offset_286915431=1034805866697588736"
+cookie = ""
 
 headers = {
     # 获取桌面版UA
@@ -87,7 +88,7 @@ def get_next_page_offset(params):
         return None
 
 
-def main(video_id='BV1WiAKeWEPc'):
+def get_comments_by_bv(video_id='BV1WiAKeWEPc'):
     # 获取oid
     oid = get_oid(author_url.format(video_id=video_id))
     print('oid:', oid)
@@ -95,19 +96,15 @@ def main(video_id='BV1WiAKeWEPc'):
         print('获取oid失败')
         return
 
-    mode = 3
-    type = 1
-    plat = 1
-    web_location = 1315875
     next_offset = ''
     params = {
         'oid': oid,
-        'type': type,
-        'mode': mode,
+        'type': 1,
+        'mode': 3,
         'pagination_str': '{"offset":""}',
         'seek_rpid': '',
-        'plat': plat,
-        'web_location': web_location,
+        'plat': 1,
+        'web_location': 1315875,
         'w_rid': '',
         'wts': '',
     }
@@ -144,5 +141,6 @@ def main(video_id='BV1WiAKeWEPc'):
 
 
 if __name__ == '__main__':
-    main()
-    # get_nav()
+    cookie = browser_cookie.get_bilibili_cookie()
+    print('获取到的 Cookie 信息：', cookie)
+    get_comments_by_bv('BV1WiAKeWEPc')
