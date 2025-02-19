@@ -4,13 +4,13 @@ from playwright.sync_api import sync_playwright
 
 # B站首页
 BILIBILI_URL = 'https://www.bilibili.com'
-# 存储 localStorage 的路径，json文件自行创建，文件内容默认为空对象 {}
+# 存储浏览器数据的路径，json文件自行创建，文件内容默认为空对象 {}
 STORAGE_JSON_PATH = 'browser_data/bilibili_storage.json'
 # 5分钟等待登录超时
 WAIT_TIME_SEC = 60 * 5
 
 
-def get_playwright_page():
+def get_playwright_chromium():
     playwright = sync_playwright()
     if not playwright:
         raise ValueError('playwright sync_playwright() 初始化失败')
@@ -81,18 +81,12 @@ def save_state_close_browser(chromium, context):
 
 
 def get_bilibili_cookie():
-    chromium = get_playwright_page()
+    chromium = get_playwright_chromium()
     context = chromium.new_context(
         storage_state=STORAGE_JSON_PATH,
     )
     chromium_page = context.new_page()
     chromium_page.goto(BILIBILI_URL, wait_until='networkidle')
-
-    # 获取 Cookie
-    # cookies = context.cookies()
-    # for cookie_item in cookies:
-    #     print(f'key: {cookie_item["name"]}; value: {cookie_item["value"]}')
-    # print('cookie: ', context.cookies())
 
     # 检查是否已经是登录状态
     if check_login_status(chromium_page):
