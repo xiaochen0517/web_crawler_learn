@@ -1,14 +1,13 @@
-from os import remove
-
+import os
 import requests
 from fake_useragent import UserAgent
 import re
-import csv
 import json
 import time
 import execjs
-from urllib.parse import quote
 import browser_cookie
+
+SAVE_DATA_PATH = 'data'
 
 cookie = ""
 
@@ -88,7 +87,25 @@ def get_next_page_offset(params):
         return None
 
 
+def save_data(name, data, path):
+    if not data:
+        print('save_data 数据为空')
+        return
+    if not os.path.exists(path):
+        os.makedirs(path)
+    # 如果文件已存在，直接覆盖原文件
+    with open(f'{path}/{name}.json', 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
 def get_comments_by_bv(video_id='BV1WiAKeWEPc'):
+    # 创建保存的目录
+    if not os.path.exists(SAVE_DATA_PATH):
+        os.makedirs(SAVE_DATA_PATH)
+    video_data_path = f'{SAVE_DATA_PATH}/{video_id}'
+    if not os.path.exists(video_data_path):
+        os.makedirs(video_data_path)
+
     # 获取oid
     oid = get_oid(author_url.format(video_id=video_id))
     print('oid:', oid)
@@ -122,22 +139,16 @@ def get_comments_by_bv(video_id='BV1WiAKeWEPc'):
         w_rid_obj = get_w_rid(params)
         params['w_rid'] = w_rid_obj['w_rid']
         params['wts'] = w_rid_obj['wts']
-        print('请求参数:', json.dumps(params, indent=2, ensure_ascii=False))
         comment_data = get_comment_list(comments_url, params)
         next_offset = get_next_page_offset(comment_data)
+        # 保存数据
+        print('保存数据：', f'comments_data_{page_count}')
+        save_data(f'comments_data_{page_count}', comment_data, video_data_path)
         print('下一个分页的参数:', next_offset)
         # 随机延时 0.5s-1.0s
         time.sleep(0.5 + 0.5 * time.time() % 1)
 
-    # f = open('data.csv', mode='w', encoding='utf-8-sig', newline='')  # 创建文件对象，保存数据
-    # csv_writer = csv.DictWriter(f, fieldnames=[
-    #     '昵称',
-    #     '性别',
-    #     'IP',
-    #     '评论',
-    #     '点赞',
-    # ])
-    # csv_writer.writeheader()
+    print('获取评论列表完成')
 
 
 if __name__ == '__main__':
