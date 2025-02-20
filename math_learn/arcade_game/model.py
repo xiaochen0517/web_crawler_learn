@@ -2,14 +2,41 @@ import math
 from random import randint, uniform
 
 from py_lib import vectors
+from py_lib.vectors import distance
+import numpy as np
+
+
+# def segments_intersect(a, b, c, d):
+#     # 判断两线段是否相交
+#     def ccw(a, b, c):
+#         return (c[1] - a[1]) * (b[0] - a[0]) > (b[1] - a[1]) * (c[0] - a[0])
+#
+#     return ccw(a, c, d) != ccw(b, c, d) and ccw(a, b, c) != ccw(a, b, d)
+
+
+def standard_form(a, b):
+    return b[1] - a[1], a[0] - b[0], a[0] * b[1] - a[1] * b[0]
+
+
+def intersection(a, b, c, d):
+    a1, b1, c1 = standard_form(a, b)
+    a2, b2, c2 = standard_form(c, d)
+    m = np.array([[a1, b1], [a2, b2]])
+    c = np.array([c1, c2])
+    return np.linalg.solve(m, c)
 
 
 def segments_intersect(a, b, c, d):
-    # 判断两线段是否相交
-    def ccw(a, b, c):
-        return (c[1] - a[1]) * (b[0] - a[0]) > (b[1] - a[1]) * (c[0] - a[0])
-
-    return ccw(a, c, d) != ccw(b, c, d) and ccw(a, b, c) != ccw(a, b, d)
+    d1 = distance(a, b)
+    d2 = distance(c, d)
+    try:
+        x, y = intersection(a, b, c, d)
+        return (distance(a, (x, y)) <= d1
+                and distance(b, (x, y)) <= d1
+                and distance(c, (x, y)) <= d2
+                and distance(d, (x, y)) <= d2)
+    except np.linalg.LinAlgError:
+        return False
 
 
 class PolygonModel():
