@@ -47,7 +47,11 @@ def plot_secant(f, x1, x2, color='k'):
     plt.scatter([x1, x2], [f(x1), f(x2)], c=color)
 
 
-def plot_points(points, color='k'):
+def plot_points(points, color='k', point_size=100, tlabel=None, xlabel=None):
     x_list = [p[0] for p in points]
     y_list = [p[1] for p in points]
-    plt.scatter(x_list, y_list, c=color)
+    if tlabel:
+        plt.xlabel(tlabel, fontsize=18)
+    if xlabel:
+        plt.ylabel(xlabel, fontsize=18)
+    plt.scatter(x_list, y_list, c=color, s=point_size)
